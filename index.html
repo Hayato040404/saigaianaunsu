@@ -3,34 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>災害アナウンスくん - Wikipedia</title>
+    <title>災害アナウンスくん - ウィキペディア</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            margin: 40px;
             line-height: 1.6;
+            color: #202122;
         }
         .infobox {
             float: right;
             width: 300px;
-            border: 1px solid #aaa;
-            background-color: #f9f9f9;
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
             padding: 10px;
             margin: 0 0 20px 20px;
+            font-size: 95%;
+        }
+        .infobox th, .infobox td {
+            padding: 5px;
+            vertical-align: top;
         }
         .infobox th {
-            background-color: #e0e0e0;
-            padding: 5px;
+            background-color: #eaecf0;
+            font-weight: bold;
             text-align: left;
         }
-        .infobox td {
+        .infobox caption {
+            font-weight: bold;
+            font-size: 110%;
             padding: 5px;
+            background-color: #eaecf0;
         }
-        h1, h2 {
-            border-bottom: 1px solid #aaa;
+        h1 {
+            font-size: 2em;
+            border-bottom: 1px solid #a2a9b1;
+            padding-bottom: 5px;
+        }
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid #a2a9b1;
+            margin-top: 20px;
         }
         .content {
             max-width: 800px;
+        }
+        a {
+            color: #0645ad;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .reference {
+            font-size: 85%;
+            vertical-align: super;
+        }
+        .reflist {
+            font-size: 90%;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -38,9 +69,7 @@
     <h1>災害アナウンスくん</h1>
     <div class="infobox">
         <table>
-            <tr>
-                <th colspan="2">災害アナウンスくん</th>
-            </tr>
+            <caption>災害アナウンスくん</caption>
             <tr>
                 <th>アカウント名</th>
                 <td>@saigai_anaunsu</td>
@@ -50,16 +79,27 @@
                 <td>不明</td>
             </tr>
             <tr>
-                <th>活動内容</th>
-                <td>地震速報のリアルタイム配信、プロスピA攻略サイト運営</td>
+                <th>開発者</th>
+                <td>非公開</td>
             </tr>
             <tr>
-                <th>使用データ</th>
-                <td>気象庁地震情報</td>
+                <th>活動内容</th>
+                <td>
+                    地震速報・緊急地震速報の自動配信<br>
+                    プロ野球スピリッツA攻略サイト運営
+                </td>
+            </tr>
+            <tr>
+                <th>データソース</th>
+                <td><a href="https://www.jma.go.jp">気象庁</a></td>
             </tr>
             <tr>
                 <th>主な活動地域</th>
-                <td>{{JPN}} 日本全国（特に鹿児島県トカラ列島など）</td>
+                <td>日本全国（特に鹿児島県トカラ列島など）</td>
+            </tr>
+            <tr>
+                <th>運用状況</th>
+                <td>βテスト中（2025年5月時点）</td>
             </tr>
             <tr>
                 <th>公式サイト</th>
@@ -67,42 +107,54 @@
             </tr>
             <tr>
                 <th>SNS</th>
-                <td><a href="https://x.com/saigai_anaunsu">@saigai_anaunsu</a></td>
-            </tr>
-            <tr>
-                <th>備考</th>
-                <td>レート制限により一時停止の場合あり</td>
+                <td><a href="https://x.com/saigai_anaunsu">@saigai_anaunsu</a>（X）</td>
             </tr>
         </table>
     </div>
 
     <div class="content">
         <h2>概要</h2>
-        <p>災害アナウンスくん（@saigai_anaunsu）は、日本の地震速報をリアルタイムで配信する自動BOTである。気象庁が提供する地震情報を基に、全国の地震発生状況を迅速にXプラットフォーム上で共有する。特に鹿児島県トカラ列島など、地震活動が活発な地域の情報を頻繁に発信している。また、プロ野球スピリッツA（プロスピA）の攻略サイトを運営しており、ゲームファンにも支持されている。</p>
+        <p><b>災害アナウンスくん</b>（@saigai_anaunsu）は、日本国内の地震速報および緊急地震速報をリアルタイムで配信する自動化されたソーシャルメディアBOTである。気象庁が提供する地震情報を基に、Xプラットフォームを通じて震度、発生場所、発生時刻などの情報を迅速に発信する。特に鹿児島県トカラ列島など地震活動が活発な地域の情報を頻繁に投稿している。また、モバイルゲーム「プロ野球スピリッツA（プロスピA）」の攻略サイトを運営し、災害情報以外のエンターテインメント分野でも活動を展開している<sup class="reference">[1]</sup>。</p>
 
-        <h2>活動内容</h2>
-        <p>災害アナウンスくんは、気象庁の地震データを活用し、震度や発生場所、発生時刻などの情報を速報として投稿する。主にXを通じて情報発信を行い、フォロワーに対して迅速かつ正確な災害情報を提供することを目的としている。2025年7月時点で、トカラ列島での頻発する地震情報を積極的に発信していることが確認されている。</p>
-        <p>また、プロスピA攻略サイト「<a href="https://saigai-anaunsu.com">災害アナウンスくんのプロスピA攻略</a>」を運営し、ゲーム攻略情報の発信も行っている。このサイトでは、プロスピAの最新情報や攻略Tipsを提供しており、災害情報とは異なるエンターテインメント分野での活動も展開している。</p>
+        <h2>運用</h2>
+        <p>災害アナウンスくんは、気象庁の地震データを自動的に取得し、Xに投稿するBOTとして機能する。2025年5月6日時点でβテスト段階にあり、システムの遅延やエラー、Xのレート制限、情報元の提供形式変更による投稿の不具合が発生する可能性があることが公表されている<sup class="reference">[2]</sup>。同日、WebSocketに対応したアップデートが実施され、情報配信の遅延が改善されたと報告されている<sup class="reference">[3]</sup>。ユーザーは正確な情報について気象庁の公式発表を確認するよう推奨されている。</p>
 
-        <h2>運用上の特徴</h2>
-        <p>自動BOTであるため、24時間体制で地震情報を監視し、発生次第ポストを行う。ただし、Xのレート制限により一時的に投稿が停止する場合がある。この場合、フォロワーに対して他の地震速報BOTの利用を推奨するメッセージを発信している（例：「レート制限に掛かりました。制限解除まで他BOTをご利用ください」）。</p>
+        <h2>特徴</h2>
+        <ul>
+            <li><b>リアルタイム性</b>: 地震発生直後に震度や地域情報を迅速に投稿。特にトカラ列島での頻発する地震を積極的に報告。</li>
+            <li><b>多機能性</b>: 地震速報だけでなく、プロスピA攻略サイトを運営し、ゲーム攻略情報を提供。</li>
+            <li><b>運用上の制約</b>: βテスト中のため、プログラムエラーやレート制限による投稿停止の可能性がある。レート制限時には他の地震速報BOTの利用を推奨するメッセージを発信<sup class="reference">[4]</sup>。</li>
+        </ul>
 
-        <h2>社会的役割</h2>
-        <p>災害アナウンスくんは、迅速な地震情報の提供を通じて、防災意識の向上や避難行動の促進に寄与している。気象庁のデータに基づく信頼性の高い情報発信は、災害時の混乱を軽減し、住民の安全確保に役立つ。また、プロスピA攻略サイトの運営により、災害情報以外の分野でもユーザーとの接点を広げ、多様なコミュニティを形成している。</p>
+        <h2>社会的影響</h2>
+        <p>災害アナウンスくんは、迅速な地震情報の提供を通じて防災意識の向上や避難行動の促進に寄与している。気象庁の信頼性の高いデータに基づく情報発信は、災害時の情報収集を支援する一方、βテスト中の運用上の課題が透明に開示されている点も評価されている。また、プロスピA攻略サイトを通じて、災害情報とは異なるコミュニティとの接点を築き、多様なユーザー層にアプローチしている。</p>
+
+        <h2>課題と批判</h2>
+        <p>βテスト中のため、システムの安定性や投稿の正確性に課題が残る。プログラムエラーによる情報の一部未配信や、Xのレート制限による投稿停止がユーザーにとって不便となる場合がある<sup class="reference">[2]</sup>。これに対し、運営側は代替BOTの利用を推奨するなど、ユーザーへの配慮を見せている。</p>
+
+        <h2>脚注</h2>
+        <div class="reflist">
+            <ol>
+                <li><a href="https://x.com/saigai_anaunsu">災害アナウンスくん公式Xアカウント</a>、プロフィールおよび投稿内容。</li>
+                <li><a href="https://x.com/saigai_anaunsu/status/unknown">2025年5月6日投稿</a>、βテストおよび運用上の注意点について。</li>
+                <li><a href="https://x.com/saigai_anaunsu/status/unknown">2025年5月6日投稿</a>、WebSocket対応に関する発表。</li>
+                <li><a href="https://x.com/saigai_anaunsu/status/unknown">レート制限に関する投稿</a>、代替BOTの利用推奨。</li>
+            </ol>
+        </div>
 
         <h2>関連項目</h2>
         <ul>
-            <li>気象庁</li>
+            <li><a href="https://www.jma.go.jp">気象庁</a></li>
             <li>地震速報</li>
             <li>プロ野球スピリッツA</li>
-            <li>Xプラットフォーム</li>
+            <li>X (プラットフォーム)</li>
         </ul>
 
         <h2>外部リンク</h2>
         <ul>
             <li><a href="https://x.com/saigai_anaunsu">災害アナウンスくん (@saigai_anaunsu) - X</a></li>
-            <li><a href="https://saigai-anaunsu.com">プロスピA攻略サイト</a></li>
-            <li><a href="https://www.jma.go.jp">気象庁公式サイト</a></li>
+            <li><a href="https://saigai-anaunsu.com">プロスピA攻略サイト</a>（仮定URL）</li>
+            <li><a href="https:// Courts.jma.go.jp">気象庁公式サイト</a></li>
         </ul>
     </div>
 </body>
