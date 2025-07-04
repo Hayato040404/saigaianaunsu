@@ -2,160 +2,255 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>災害アナウンスくん - ウィキペディア</title>
+    <title>リアルタイム震度表示</title>
     <style>
         body {
-            font-family: 'Helvetica', 'Arial', sans-serif;
-            margin: 40px;
-            line-height: 1.6;
-            color: #202122;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
         }
-        .infobox {
-            float: right;
-            width: 300px;
-            border: 1px solid #a2a9b1;
-            background-color: #f8f9fa;
-            padding: 10px;
-            margin: 0 0 20px 20px;
-            font-size: 95%;
+        canvas {
+            border: 1px solid #000;
         }
-        .infobox th, .infobox td {
-            padding: 5px;
-            vertical-align: top;
-        }
-        .infobox th {
-            background-color: #eaecf0;
-            font-weight: bold;
-            text-align: left;
-        }
-        .infobox caption {
-            font-weight: bold;
-            font-size: 110%;
-            padding: 5px;
-            background-color: #eaecf0;
-        }
-        h1 {
-            font-size: 2em;
-            border-bottom: 1px solid #a2a9b1;
-            padding-bottom: 5px;
-        }
-        h2 {
-            font-size: 1.5em;
-            border-bottom: 1px solid #a2a9b1;
-            margin-top: 20px;
-        }
-        .content {
-            max-width: 800px;
-        }
-        a {
-            color: #0645ad;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .reference {
-            font-size: 85%;
-            vertical-align: super;
-        }
-        .reflist {
-            font-size: 90%;
+        #info {
             margin-top: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+        }
+        @media (max-width: 600px) {
+            #info {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>災害アナウンスくん</h1>
-    <div class="infobox">
-        <table>
-            <caption>災害アナウンスくん</caption>
-            <tr>
-                <th>アカウント名</th>
-                <td>@saigai_anaunsu</td>
-            </tr>
-            <tr>
-                <th>運営開始</th>
-                <td>不明</td>
-            </tr>
-            <tr>
-                <th>開発者</th>
-                <td>非公開</td>
-            </tr>
-            <tr>
-                <th>活動内容</th>
-                <td>
-                    地震速報・緊急地震速報の自動配信<br>
-                    プロ野球スピリッツA攻略サイト運営
-                </td>
-            </tr>
-            <tr>
-                <th>データソース</th>
-                <td><a href="https://www.jma.go.jp">気象庁</a></td>
-            </tr>
-            <tr>
-                <th>主な活動地域</th>
-                <td>日本全国（特に鹿児島県トカラ列島など）</td>
-            </tr>
-            <tr>
-                <th>運用状況</th>
-                <td>βテスト中（2025年5月時点）</td>
-            </tr>
-            <tr>
-                <th>公式サイト</th>
-                <td><a href="https://saigai-anaunsu.com">プロスピA攻略サイト</a></td>
-            </tr>
-            <tr>
-                <th>SNS</th>
-                <td><a href="https://x.com/saigai_anaunsu">@saigai_anaunsu</a>（X）</td>
-            </tr>
-        </table>
-    </div>
+    <canvas id="mapCanvas"></canvas>
+    <div id="info">データ取得中...</div>
+    <script>
+        // キャンバスとコンテキストの取得
+        const canvas = document.getElementById('mapCanvas');
+        const ctx = canvas.getContext('2d');
+        const infoDiv = document.getElementById('info');
 
-    <div class="content">
-        <h2>概要</h2>
-        <p><b>災害アナウンスくん</b>（@saigai_anaunsu）は、日本国内の地震速報および緊急地震速報をリアルタイムで配信する自動化されたソーシャルメディアBOTである。気象庁が提供する地震情報を基に、Xプラットフォームを通じて震度、発生場所、発生時刻などの情報を迅速に発信する。特に鹿児島県トカラ列島など地震活動が活発な地域の情報を頻繁に投稿している。また、モバイルゲーム「プロ野球スピリッツA（プロスピA）」の攻略サイトを運営し、災害情報以外のエンターテインメント分野でも活動を展開している<sup class="reference">[1]</sup>。</p>
+        // マップ画像の読み込み
+        const mapImage = new Image();
+        mapImage.src = 'https://s.yimg.jp/images/weather/pc/v2/img/earthquake/trench_sea_map.png';
 
-        <h2>運用</h2>
-        <p>災害アナウンスくんは、気象庁の地震データを自動的に取得し、Xに投稿するBOTとして機能する。2025年5月6日時点でβテスト段階にあり、システムの遅延やエラー、Xのレート制限、情報元の提供形式変更による投稿の不具合が発生する可能性があることが公表されている<sup class="reference">[2]</sup>。同日、WebSocketに対応したアップデートが実施され、情報配信の遅延が改善されたと報告されている<sup class="reference">[3]</sup>。ユーザーは正確な情報について気象庁の公式発表を確認するよう推奨されている。</p>
+        // 震度に応じた色の定義
+        const intensityColors = {
+            '-1': '#97b7cc', '0': '#97b7cc', '1': '#90b3ca', '2': '#89afc8', '3': '#71a2cb',
+            '4': '#5ea7ac', '5': '#38a477', '6': '#0fb02b', '7': '#f4e200', '8': '#fbc300',
+            '9': '#ffaf00', '10': '#ff9', '11': '#ff7e00', '12': '#ff6200', '13': '#fc4c02',
+            '14': '#f53605', '15': '#f11520', '16': '#ed0047', '17': '#e30071', '18': '#dc009c',
+            '19': '#c900ba', '20': '#b600d7', 'none': 'transparent'
+        };
 
-        <h2>特徴</h2>
-        <ul>
-            <li><b>リアルタイム性</b>: 地震発生直後に震度や地域情報を迅速に投稿。特にトカラ列島での頻発する地震を積極的に報告。</li>
-            <li><b>多機能性</b>: 地震速報だけでなく、プロスピA攻略サイトを運営し、ゲーム攻略情報を提供。</li>
-            <li><b>運用上の制約</b>: βテスト中のため、プログラムエラーやレート制限による投稿停止の可能性がある。レート制限時には他の地震速報BOTの利用を推奨するメッセージを発信<sup class="reference">[4]</sup>。</li>
-        </ul>
+        // 観測地点の座標データ
+        let sites = [];
 
-        <h2>社会的影響</h2>
-        <p>災害アナウンスくんは、迅速な地震情報の提供を通じて防災意識の向上や避難行動の促進に寄与している。気象庁の信頼性の高いデータに基づく情報発信は、災害時の情報収集を支援する一方、βテスト中の運用上の課題が透明に開示されている点も評価されている。また、プロスピA攻略サイトを通じて、災害情報とは異なるコミュニティとの接点を築き、多様なユーザー層にアプローチしている。</p>
+        // 詳細な地域マッピング
+        const regionMap = {
+            '北海道': { lat: 43.0, lon: 141.0 },
+            '青森': { lat: 40.8, lon: 140.7 },
+            '岩手': { lat: 39.7, lon: 141.2 },
+            '宮城': { lat: 38.3, lon: 141.0 },
+            '秋田': { lat: 39.7, lon: 140.1 },
+            '山形': { lat: 38.2, lon: 140.4 },
+            '福島': { lat: 37.8, lon: 140.5 },
+            '東京': { lat: 35.7, lon: 139.7 },
+            '神奈川': { lat: 35.4, lon: 139.6 },
+            '千葉': { lat: 35.6, lon: 140.1 },
+            '埼玉': { lat: 35.9, lon: 139.6 },
+            '群馬': { lat: 36.4, lon: 139.1 },
+            '栃木': { lat: 36.6, lon: 139.9 },
+            '茨城': { lat: 36.3, lon: 140.4 },
+            '静岡': { lat: 34.9, lon: 138.4 },
+            '愛知': { lat: 35.2, lon: 136.9 },
+            '岐阜': { lat: 35.4, lon: 136.8 },
+            '三重': { lat: 34.7, lon: 136.5 },
+            '大阪': { lat: 34.7, lon: 135.5 },
+            '京都': { lat: 35.0, lon: 135.8 },
+            '兵庫': { lat: 34.7, lon: 135.2 },
+            '奈良': { lat: 34.7, lon: 135.8 },
+            '和歌山': { lat: 34.2, lon: 135.2 },
+            '広島': { lat: 34.4, lon: 132.5 },
+            '岡山': { lat: 34.7, lon: 133.9 },
+            '山口': { lat: 34.2, lon: 131.5 },
+            '鳥取': { lat: 35.5, lon: 134.2 },
+            '島根': { lat: 35.5, lon: 133.1 },
+            '香川': { lat: 34.3, lon: 134.0 },
+            '徳島': { lat: 34.1, lon: 134.6 },
+            '愛媛': { lat: 33.8, lon: 132.8 },
+            '高知': { lat: 33.6, lon: 133.5 },
+            '福岡': { lat: 33.6, lon: 130.4 },
+            '佐賀': { lat: 33.3, lon: 130.3 },
+            '長崎': { lat: 32.7, lon: 129.9 },
+            '熊本': { lat: 32.8, lon: 130.7 },
+            '大分': { lat: 33.2, lon: 131.6 },
+            '宮崎': { lat: 31.9, lon: 131.4 },
+            '鹿児島': { lat: 31.6, lon: 130.6 },
+            '沖縄': { lat: 26.2, lon: 127.7 }
+        };
 
-        <h2>課題と批判</h2>
-        <p>βテスト中のため、システムの安定性や投稿の正確性に課題が残る。プログラムエラーによる情報の一部未配信や、Xのレート制限による投稿停止がユーザーにとって不便となる場合がある<sup class="reference">[2]</sup>。これに対し、運営側は代替BOTの利用を推奨するなど、ユーザーへの配慮を見せている。</p>
+        // 観測地点データの取得
+        async function fetchSiteList() {
+            try {
+                const response = await fetch('https://weather-kyoshin.west.edge.storage-yahoo.jp/SiteList/sitelist.json');
+                const data = await response.json();
+                sites = data.items.map(item => ({ lat: item[0], lon: item[1] }));
+                console.log('観測地点データを取得しました:', sites.length);
+            } catch (error) {
+                console.error('観測地点データの取得に失敗しました:', error);
+                infoDiv.textContent = '観測地点データの取得に失敗しました';
+            }
+        }
 
-        <h2>脚注</h2>
-        <div class="reflist">
-            <ol>
-                <li><a href="https://x.com/saigai_anaunsu">災害アナウンスくん公式Xアカウント</a>、プロフィールおよび投稿内容。</li>
-                <li><a href="https://x.com/saigai_anaunsu/status/unknown">2025年5月6日投稿</a>、βテストおよび運用上の注意点について。</li>
-                <li><a href="https://x.com/saigai_anaunsu/status/unknown">2025年5月6日投稿</a>、WebSocket対応に関する発表。</li>
-                <li><a href="https://x.com/saigai_anaunsu/status/unknown">レート制限に関する投稿</a>、代替BOTの利用推奨。</li>
-            </ol>
-        </div>
+        // 座標をキャンバスに変換
+        function latLonToCanvas(lat, lon) {
+            const minLat = 24.0, maxLat = 46.0;
+            const minLon = 122.0, maxLon = 146.0;
+            const x = ((lon - minLon) / (maxLon - minLon)) * canvas.width;
+            const y = canvas.height - ((lat - minLat) / (maxLat - minLat)) * canvas.height;
+            return { x, y };
+        }
 
-        <h2>関連項目</h2>
-        <ul>
-            <li><a href="https://www.jma.go.jp">気象庁</a></li>
-            <li>地震速報</li>
-            <li>プロ野球スピリッツA</li>
-            <li>X (プラットフォーム)</li>
-        </ul>
+        // 距離計算
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            return R * c;
+        }
 
-        <h2>外部リンク</h2>
-        <ul>
-            <li><a href="https://x.com/saigai_anaunsu">災害アナウンスくん (@saigai_anaunsu) - X</a></li>
-            <li><a href="https://saigai-anaunsu.com">プロスピA攻略サイト</a>（仮定URL）</li>
-            <li><a href="https:// Courts.jma.go.jp">気象庁公式サイト</a></li>
-        </ul>
-    </div>
+        // 震度データの取得と描画
+        async function fetchAndDrawIntensity() {
+            try {
+                const now = new Date();
+                const offsets = [0, 2, 10];
+                let data = null;
+
+                for (const offset of offsets) {
+                    const offsetNow = new Date(now.getTime() - offset * 1000);
+                    const year = offsetNow.getFullYear();
+                    const month = String(offsetNow.getMonth() + 1).padStart(2, '0');
+                    const day = String(offsetNow.getDate()).padStart(2, '0');
+                    const hour = String(offsetNow.getHours()).padStart(2, '0');
+                    const minute = String(offsetNow.getMinutes()).padStart(2, '0');
+                    const second = String(offsetNow.getSeconds()).padStart(2, '0');
+                    const url = `https://weather-kyoshin.west.edge.storage-yahoo.jp/RealTimeData/${year}${month}${day}/${year}${month}${day}${hour}${minute}${second}.json`;
+
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+                    const response = await fetch(url, { signal: controller.signal });
+                    clearTimeout(timeoutId);
+
+                    if (response.ok) {
+                        data = await response.json();
+                        console.log(`データ取得成功: ${url}`);
+                        break;
+                    } else {
+                        console.log(`リクエスト失敗 (${offset}秒前): ${response.status}`);
+                    }
+                }
+
+                if (!data) {
+                    throw new Error('全てのタイムオフセットでデータ取得に失敗');
+                }
+
+                const intensity = data.realTimeData.intensity;
+                const dataTime = data.realTimeData.dataTime;
+
+                // キャンバスをクリアし、マップ画像を描画
+                canvas.width = mapImage.width; // 512px
+                canvas.height = mapImage.height; // 512px
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(mapImage, 0, 0);
+
+                // 震度データの処理と描画
+                const regionIntensities = {};
+                for (let i = 0; i < intensity.length && i < sites.length; i++) {
+                    const char = intensity[i];
+                    const unicodeValue = char.charCodeAt(0);
+                    let intensityValue = unicodeValue - 100;
+                    let mappedIntensity;
+
+                    if (intensityValue < 0) {
+                        mappedIntensity = 'none';
+                    } else {
+                        const scale = [-3, -2.5, -2, -1.5, -1, -0.5, 0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7];
+                        mappedIntensity = intensityValue <= 20 ? scale[intensityValue] : 'none';
+                    }
+
+                    const site = sites[i];
+                    if (!site) continue;
+                    const { x, y } = latLonToCanvas(site.lat, site.lon);
+
+                    // 観測点を一回り小さく（半径2）
+                    ctx.beginPath();
+                    ctx.arc(x, y, 2, 0, 2 * Math.PI);
+                    ctx.fillStyle = intensityColors[intensityValue] || intensityColors['none'];
+                    ctx.fill();
+                    ctx.strokeStyle = ctx.fillStyle;
+                    ctx.stroke();
+
+                    // 地域ごとの震度を推定
+                    for (const [region, center] of Object.entries(regionMap)) {
+                        const distance = calculateDistance(site.lat, site.lon, center.lat, center.lon);
+                        if (distance < 150) {
+                            regionIntensities[region] = Math.max(regionIntensities[region] || 0, intensityValue);
+                        }
+                    }
+                }
+
+                // リアルタイム震度の表示
+                let shindoText = '震度情報: ';
+                for (const [region, intensity] of Object.entries(regionIntensities)) {
+                    const mappedIntensity = intensity <= 20 ? Math.round((intensity / 20) * 7) : 0;
+                    shindoText += `【震度${mappedIntensity}】${region} | `;
+                }
+                if (shindoText === '震度情報: ') {
+                    shindoText += '地域情報または震度が取得できませんでした';
+                } else {
+                    shindoText = shindoText.slice(0, -3); // 最後の「 | 」を削除
+                }
+                infoDiv.textContent = `${shindoText} | 取得時刻: ${dataTime} (JST)`;
+            } catch (error) {
+                console.error('震度データの取得に失敗しました:', error);
+                infoDiv.textContent = `データ取得に失敗しました: ${error.message}`;
+            }
+        }
+
+        // 初期化
+        async function init() {
+            await fetchSiteList();
+            mapImage.onload = () => {
+                setInterval(fetchAndDrawIntensity, 2000); // 2秒ごとに更新
+                fetchAndDrawIntensity(); // 初回即時実行
+            };
+            mapImage.onerror = () => {
+                console.error('マップ画像の読み込みに失敗しました');
+                infoDiv.textContent = 'マップ画像の読み込みに失敗しました';
+                fetchAndDrawIntensity(); // マップなしで続行
+            };
+        }
+
+        init();
+    </script>
 </body>
 </html>
