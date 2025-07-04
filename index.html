@@ -152,12 +152,15 @@
                     const hour = String(offsetNow.getHours()).padStart(2, '0');
                     const minute = String(offsetNow.getMinutes()).padStart(2, '0');
                     const second = String(offsetNow.getSeconds()).padStart(2, '0');
-                    const url = `https://weather-kyoshin.west.edge.storage-yahoo.jp/RealTimeData/${year}${month}${day}/${year}${month}${day}${hour}${minute}${second}.json`;
+                    const url = `https://weather-kyoshin.west.edge.storage-yahoo.jp/RealTimeData/${year}${month}${day}/${year}${month}${day}${hour}${minute}${second}.json?t=${Date.now()}`; // キャッシュ回避
 
                     const controller = new AbortController();
                     const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-                    const response = await fetch(url, { signal: controller.signal });
+                    const response = await fetch(url, { 
+                        signal: controller.signal,
+                        cache: 'no-store' // キャッシュを無効化
+                    });
                     clearTimeout(timeoutId);
 
                     if (response.ok) {
@@ -240,7 +243,7 @@
         async function init() {
             await fetchSiteList();
             mapImage.onload = () => {
-                setInterval(fetchAndDrawIntensity, 2000); // 2秒ごとに更新
+                setInterval(fetchAndDrawIntensity, 5000); // 5秒ごとに更新
                 fetchAndDrawIntensity(); // 初回即時実行
             };
             mapImage.onerror = () => {
